@@ -1,197 +1,990 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mohamed Suhail | Software Developer</title>
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Mohamed Suhail | Software Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050810;
+  --bg2: #090d1a;
+  --primary: #00d4ff;
+  --secondary: #7b2fff;
+  --accent: #ff2d78;
+  --text: #c8d8f0;
+  --text-dim: #5a6a8a;
+  --card: rgba(10,20,50,0.7);
+  --border: rgba(0,212,255,0.15);
+  --glow: 0 0 20px rgba(0,212,255,0.3);
+  --glow2: 0 0 30px rgba(123,47,255,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;width:12px;height:12px;
+  background:var(--primary);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transition:transform 0.1s;mix-blend-mode:screen;
+  box-shadow:0 0 15px var(--primary);
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1px solid rgba(0,212,255,0.5);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transition:all 0.15s ease;
+}
+
+/* CANVAS BG */
+#canvas-bg{position:fixed;top:0;left:0;z-index:0;opacity:0.6;}
+
+/* NOISE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1;opacity:0.3;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 4rem;
+  background:rgba(5,8,16,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;
+  color:var(--primary);letter-spacing:2px;text-decoration:none;
+  text-shadow:var(--glow);
+}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  text-decoration:none;color:var(--text-dim);
+  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.9rem;
+  letter-spacing:2px;text-transform:uppercase;
+  transition:color 0.3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--primary);transform:scaleX(0);transition:transform 0.3s;
+}
+.nav-links a:hover{color:var(--primary);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-toggle{display:none;background:none;border:1px solid var(--border);
+  color:var(--primary);padding:0.4rem 0.8rem;cursor:none;font-size:1.2rem;}
+
+/* MAIN LAYOUT */
+main{position:relative;z-index:2;}
+
+/* SECTION BASE */
+section{
+  min-height:100vh;padding:6rem 4rem;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+/* === HERO === */
+#home{
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;
+  padding-top:8rem;position:relative;
+}
+.hero-left{z-index:2;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:'Space Mono',monospace;font-size:0.75rem;
+  color:var(--primary);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.hero-tag::before{content:'';display:block;width:30px;height:1px;background:var(--primary);}
+.hero-name{
+  font-family:'Orbitron',monospace;font-size:clamp(2.5rem,5vw,4.5rem);
+  font-weight:900;line-height:1.05;margin-bottom:1rem;
+  background:linear-gradient(135deg,#fff 0%,var(--primary) 50%,var(--secondary) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:300;
+  color:var(--text-dim);letter-spacing:4px;margin-bottom:0.5rem;
+}
+.hero-typed{
+  font-family:'Space Mono',monospace;font-size:1.1rem;
+  color:var(--primary);margin-bottom:2.5rem;min-height:1.8rem;
+}
+.typed-cursor{animation:blink 0.8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.9rem 2rem;font-family:'Orbitron',monospace;
+  font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden;
+  cursor:none;
+}
+.btn-primary{
+  background:var(--primary);color:#000;font-weight:700;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.btn-primary:hover{background:#fff;box-shadow:0 0 30px rgba(0,212,255,0.6);}
+.btn-outline{
+  background:transparent;color:var(--primary);
+  border:1px solid var(--primary);
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.btn-outline:hover{background:rgba(0,212,255,0.1);box-shadow:var(--glow);}
+
+.hero-socials{display:flex;gap:1rem;margin-top:2rem;}
+.social-link{
+  width:42px;height:42px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim);text-decoration:none;font-size:1.1rem;
+  transition:all 0.3s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+.social-link:hover{border-color:var(--primary);color:var(--primary);background:rgba(0,212,255,0.1);box-shadow:var(--glow);}
+
+/* 3D CARD HERO RIGHT */
+.hero-right{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.hero-3d-container{
+  width:360px;height:360px;position:relative;
+  perspective:800px;
+}
+.hero-card-3d{
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  animation:float3d 6s ease-in-out infinite;
+}
+@keyframes float3d{
+  0%,100%{transform:rotateY(-10deg) rotateX(5deg) translateY(0);}
+  33%{transform:rotateY(8deg) rotateX(-3deg) translateY(-15px);}
+  66%{transform:rotateY(-5deg) rotateX(8deg) translateY(-8px);}
+}
+.avatar-hex{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,var(--bg2),rgba(0,212,255,0.1));
+  border:1px solid var(--primary);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:5rem;font-weight:900;
+  color:var(--primary);text-shadow:var(--glow);
+  position:relative;
+  box-shadow:0 0 60px rgba(0,212,255,0.2),inset 0 0 60px rgba(0,212,255,0.05);
+}
+.avatar-hex::before{
+  content:'';position:absolute;inset:-2px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--primary),var(--secondary),var(--accent));
+  z-index:-1;animation:rotateBorder 4s linear infinite;
+}
+@keyframes rotateBorder{
+  0%{filter:hue-rotate(0deg);}
+  100%{filter:hue-rotate(360deg);}
+}
+.orbit{
+  position:absolute;inset:-30px;
+  border:1px dashed rgba(0,212,255,0.2);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  animation:spin 20s linear infinite;
+}
+.orbit2{
+  position:absolute;inset:-60px;
+  border:1px dashed rgba(123,47,255,0.15);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  animation:spin 30s linear infinite reverse;
+}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* floating badges */
+.badge{
+  position:absolute;background:var(--card);
+  border:1px solid var(--border);backdrop-filter:blur(10px);
+  padding:0.5rem 1rem;font-family:'Space Mono',monospace;
+  font-size:0.7rem;color:var(--primary);letter-spacing:1px;
+  animation:badgeFloat 3s ease-in-out infinite;
+}
+.badge-1{top:20px;right:-40px;animation-delay:0s;}
+.badge-2{bottom:40px;left:-50px;animation-delay:1s;}
+.badge-3{top:50%;right:-60px;animation-delay:2s;}
+@keyframes badgeFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+/* SECTION TITLE */
+.section-header{text-align:center;margin-bottom:4rem;}
+.section-number{
+  font-family:'Space Mono',monospace;font-size:0.75rem;
+  color:var(--primary);letter-spacing:4px;margin-bottom:0.5rem;
+}
+.section-title{
+  font-family:'Orbitron',monospace;font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:900;background:linear-gradient(135deg,#fff,var(--primary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.section-line{
+  width:60px;height:2px;background:linear-gradient(90deg,var(--primary),var(--secondary));
+  margin:1rem auto 0;
+}
+
+/* === ABOUT === */
+#about{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.about-visual{position:relative;display:flex;justify-content:center;}
+.about-cube{
+  width:280px;height:280px;position:relative;perspective:600px;
+}
+.cube-inner{
+  width:100%;height:100%;position:relative;transform-style:preserve-3d;
+  animation:rotateCube 15s linear infinite;
+}
+@keyframes rotateCube{
+  0%{transform:rotateX(10deg) rotateY(0deg);}
+  100%{transform:rotateX(10deg) rotateY(360deg);}
+}
+.cube-face{
+  position:absolute;width:280px;height:280px;
+  border:1px solid rgba(0,212,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:2.5rem;
+  background:rgba(0,212,255,0.03);backdrop-filter:blur(4px);
+}
+.cube-face.front{transform:translateZ(140px);border-color:rgba(0,212,255,0.5);}
+.cube-face.back{transform:rotateY(180deg) translateZ(140px);}
+.cube-face.left{transform:rotateY(-90deg) translateZ(140px);}
+.cube-face.right{transform:rotateY(90deg) translateZ(140px);}
+.cube-face.top{transform:rotateX(90deg) translateZ(140px);}
+.cube-face.bottom{transform:rotateX(-90deg) translateZ(140px);}
+
+.about-content h3{
+  font-family:'Orbitron',monospace;font-size:1.5rem;color:var(--primary);
+  margin-bottom:1.5rem;
+}
+.about-bio{
+  font-size:1.05rem;line-height:1.8;color:var(--text-dim);margin-bottom:2rem;
+}
+.about-tags{display:flex;flex-wrap:wrap;gap:0.7rem;}
+.tag{
+  padding:0.4rem 1rem;border:1px solid var(--border);
+  font-family:'Space Mono',monospace;font-size:0.7rem;
+  color:var(--primary);letter-spacing:1px;
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  background:rgba(0,212,255,0.05);
+  transition:all 0.3s;
+}
+.tag:hover{background:rgba(0,212,255,0.15);box-shadow:var(--glow);}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  padding:1.2rem;text-align:center;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.stat-num{
+  font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;
+  color:var(--primary);display:block;
+}
+.stat-label{font-size:0.75rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
+
+/* === SKILLS === */
+#skills{background:var(--bg);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;}
+.skill-card{
+  background:var(--card);border:1px solid var(--border);
+  padding:1.8rem;position:relative;overflow:hidden;
+  transition:all 0.4s;
+  clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,0 100%);
+}
+.skill-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  transform:scaleX(0);transition:transform 0.4s;
+}
+.skill-card:hover{border-color:rgba(0,212,255,0.4);box-shadow:var(--glow);transform:translateY(-4px);}
+.skill-card:hover::before{transform:scaleX(1);}
+.skill-icon{font-size:2rem;margin-bottom:1rem;}
+.skill-cat{
+  font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--primary);
+  letter-spacing:2px;margin-bottom:0.8rem;text-transform:uppercase;
+}
+.skill-items{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.skill-item{
+  padding:0.25rem 0.7rem;background:rgba(0,212,255,0.08);
+  border:1px solid rgba(0,212,255,0.2);font-size:0.8rem;
+  font-family:'Space Mono',monospace;color:var(--text);
+  transition:all 0.2s;
+}
+.skill-item:hover{background:rgba(0,212,255,0.2);color:var(--primary);}
+.corner-deco{
+  position:absolute;top:0;right:0;width:20px;height:20px;
+  background:linear-gradient(135deg,var(--primary),transparent);
+}
+
+/* === PROJECTS === */
+#projects{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;}
+.project-card{
+  background:var(--card);border:1px solid var(--border);
+  padding:2rem;position:relative;overflow:hidden;
+  transition:all 0.4s;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%);
+}
+.project-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(0,212,255,0.03));
+  opacity:0;transition:opacity 0.4s;
+}
+.project-card:hover{border-color:rgba(0,212,255,0.5);box-shadow:0 20px 60px rgba(0,0,0,0.5),var(--glow);transform:translateY(-6px);}
+.project-card:hover::after{opacity:1;}
+.project-num{
+  font-family:'Space Mono',monospace;font-size:0.7rem;
+  color:var(--text-dim);letter-spacing:2px;margin-bottom:1rem;
+}
+.project-name{
+  font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;
+  color:#fff;margin-bottom:1rem;
+}
+.project-desc{font-size:0.95rem;color:var(--text-dim);line-height:1.7;margin-bottom:1.5rem;}
+.project-tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;}
+.project-tag{
+  padding:0.2rem 0.6rem;background:rgba(123,47,255,0.15);
+  border:1px solid rgba(123,47,255,0.3);font-size:0.75rem;
+  font-family:'Space Mono',monospace;color:#a78bff;
+}
+.project-link{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:'Orbitron',monospace;font-size:0.7rem;letter-spacing:2px;
+  color:var(--primary);text-decoration:none;text-transform:uppercase;
+  transition:all 0.3s;
+}
+.project-link:hover{color:#fff;text-shadow:var(--glow);}
+.project-link::after{content:'→';transition:transform 0.3s;}
+.project-link:hover::after{transform:translateX(5px);}
+.corner-deco2{
+  position:absolute;bottom:0;right:0;width:20px;height:20px;
+  background:linear-gradient(-45deg,rgba(0,212,255,0.3),transparent);
+}
+
+/* === EXPERIENCE === */
+#experience{background:var(--bg);}
+.timeline{position:relative;padding-left:3rem;}
+.timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:linear-gradient(180deg,var(--primary),var(--secondary),transparent);
+}
+.timeline-item{position:relative;margin-bottom:3rem;}
+.timeline-dot{
+  position:absolute;left:-3.35rem;top:0.3rem;
+  width:14px;height:14px;background:var(--primary);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  box-shadow:0 0 15px rgba(0,212,255,0.6);
+}
+.timeline-date{
+  font-family:'Space Mono',monospace;font-size:0.7rem;
+  color:var(--primary);letter-spacing:2px;margin-bottom:0.5rem;
+}
+.timeline-company{
+  font-family:'Orbitron',monospace;font-size:1.1rem;
+  color:#fff;margin-bottom:0.3rem;
+}
+.timeline-role{
+  font-size:0.9rem;color:var(--secondary);
+  letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;
+}
+.timeline-points{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}
+.timeline-points li{
+  padding-left:1.2rem;position:relative;
+  font-size:0.95rem;color:var(--text-dim);line-height:1.6;
+}
+.timeline-points li::before{
+  content:'▸';position:absolute;left:0;color:var(--primary);font-size:0.7rem;top:0.15rem;
+}
+
+/* === CONTACT === */
+#contact{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);}
+.contact-inner{max-width:700px;margin:0 auto;text-align:center;}
+.contact-subtitle{
+  font-size:1.1rem;color:var(--text-dim);margin-bottom:3rem;line-height:1.8;
+}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:3rem;}
+.contact-item{
+  background:var(--card);border:1px solid var(--border);
+  padding:1.5rem;text-align:center;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  transition:all 0.3s;
+}
+.contact-item:hover{border-color:rgba(0,212,255,0.4);box-shadow:var(--glow);}
+.contact-icon{font-size:1.5rem;margin-bottom:0.5rem;}
+.contact-label{
+  font-family:'Space Mono',monospace;font-size:0.65rem;
+  color:var(--text-dim);letter-spacing:2px;display:block;margin-bottom:0.3rem;
+}
+.contact-value{font-size:0.9rem;color:var(--primary);}
+.contact-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{
+  background:rgba(5,8,16,0.95);border-top:1px solid var(--border);
+  padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;position:relative;z-index:2;
+}
+.footer-logo{
+  font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--primary);
+}
+.footer-copy{
+  font-family:'Space Mono',monospace;font-size:0.65rem;
+  color:var(--text-dim);letter-spacing:1px;
+}
+.footer-socials{display:flex;gap:1rem;}
+.footer-socials a{
+  color:var(--text-dim);text-decoration:none;font-size:1rem;
+  transition:color 0.3s;
+}
+.footer-socials a:hover{color:var(--primary);}
+
+/* SCROLL INDICATOR */
+.scroll-line{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--primary),var(--secondary));
+  z-index:200;transition:width 0.1s;
+}
+
+/* GLITCH */
+.glitch{position:relative;}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;top:0;left:0;
+  background:inherit;-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.glitch::before{animation:glitch1 3s infinite;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);}
+.glitch::after{animation:glitch2 3s infinite;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);}
+@keyframes glitch1{
+  0%,90%{transform:translate(0);}
+  92%{transform:translate(-3px,1px);filter:hue-rotate(90deg);}
+  94%{transform:translate(3px,-1px);}
+  96%{transform:translate(0);}
+}
+@keyframes glitch2{
+  0%,90%{transform:translate(0);}
+  92%{transform:translate(3px,1px);filter:hue-rotate(-90deg);}
+  94%{transform:translate(-3px,-1px);}
+  96%{transform:translate(0);}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1rem 2rem;}
+  section{padding:5rem 2rem;}
+  #home{grid-template-columns:1fr;text-align:center;}
+  .hero-right{margin-top:2rem;}
+  .hero-socials{justify-content:center;}
+  .hero-btns{justify-content:center;}
+  .about-grid{grid-template-columns:1fr;}
+  .about-visual{order:-1;}
+  .nav-links{display:none;flex-direction:column;position:fixed;top:70px;left:0;right:0;
+    background:rgba(5,8,16,0.98);padding:2rem;gap:1.5rem;border-bottom:1px solid var(--border);}
+  .nav-links.open{display:flex;}
+  .nav-toggle{display:block;}
+  footer{flex-direction:column;text-align:center;padding:2rem;}
+}
+
+/* Animations on load */
+[data-aos]{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+[data-aos].aos-animate{opacity:1;transform:translateY(0);}
+[data-aos="fade-right"]{transform:translateX(-30px);}
+[data-aos="fade-right"].aos-animate{transform:translateX(0);}
+[data-aos="fade-left"]{transform:translateX(30px);}
+[data-aos="fade-left"].aos-animate{transform:translateX(0);}
+</style>
 </head>
-
 <body>
-    <!-- Header -->
-    <header class="l-header">
-        <nav class="nav bd-grid">
-            <div><a href="#" class="nav__logo"> Mohamed Suhail</a></div>
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
-                    <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-                    <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
-                    <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
-                    <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                </ul>
-            </div>
-            <div class="nav__toggle" id="nav-toggle"><i class='bx bx-menu'></i></div>
-        </nav>
-    </header>
 
-    <main class="l-main">
-        <!-- Home -->
-        <section class="home bd-grid" id="home">
-            <div class="home__data">
-                <h1 class="home__title">
-                    Hello,<br>I'm <span class="home__title-color">Md Suhail</span><br>
-                    <span class="typing-text">
-                        <span id="typed-text"></span><span class="cursor">|</span>
-                    </span>
-                </h1>
-                <a href="#contact" class="button">Contact</a>
-                <a href="MOHAMED SUHAIL A - Resume .pdf" class="button" download>My Resume</a>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="scroll-line" id="scroll-line"></div>
 
-            </div>
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">MS<span>.</span>DEV</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
 
-            <div class="home__social">
-                <a href="https://linkedin.com/in/mohamed-suhail-971b9b24a" class="home__social-icon"><i
-                        class='bx bxl-linkedin'></i></a>
-                <a href="https://github.com/md-suhail-git" class="home__social-icon"><i class='bx bxl-github'></i></a>
-            </div>
+<main>
+<!-- HERO -->
+<section id="home">
+  <div class="hero-left" data-aos="fade-right">
+    <div class="hero-tag">Software Developer</div>
+    <h1 class="hero-name glitch" data-text="Mohamed Suhail">Mohamed Suhail</h1>
+    <p class="hero-sub">Backend Specialist</p>
+    <div class="hero-typed"><span id="typed-text"></span><span class="typed-cursor">|</span></div>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-primary">Get In Touch</a>
+      <a href="#projects" class="btn btn-outline">View Projects</a>
+    </div>
+    <div class="hero-socials">
+      <a href="https://linkedin.com/in/mohamed-suhail-971b9b24a" class="social-link" target="_blank">in</a>
+      <a href="https://github.com/md-suhail-git" class="social-link" target="_blank">gh</a>
+      <a href="mailto:mdsuhail1502@gmail.com" class="social-link">✉</a>
+    </div>
+  </div>
 
-            <div class="home__img">
-                <img src="assets/img/suhail.jpeg" alt="Suhail" class="home__blob-img" />
-            </div>
-        </section>
+  <div class="hero-right" data-aos="fade-left">
+    <div class="hero-3d-container">
+      <div class="orbit"></div>
+      <div class="orbit2"></div>
+      <div class="hero-card-3d">
+        <div class="avatar-hex">MS</div>
+      </div>
+      <div class="badge badge-1">.NET Core</div>
+      <div class="badge badge-2">Azure ☁</div>
+      <div class="badge badge-3">Angular</div>
+      <div class="badge badge-3">SQL Server</div>
+      <div class="badge badge-4">Web APIs</div>
+      
+    </div>
+  </div>
+</section>
 
-        <!-- About -->
-        <section class="about section" id="about">
-            <h2 class="section-title">About</h2>
-            <div class="about__container bd-grid">
-                <div class="about__img">
-                    <img src="assets/img/about.jpeg" alt="About Suhail" />
-                </div>
-                <div>
-                    <h2 class="about__subtitle">This is Mohamed Suhail!</h2>
-                    <ul class="about__text">
-                        <li>Software Developer</li>
-                        <li>Skilled in .NET Framework,Azure</li>
-                        <li>Experience with MS-SQL & Web APIs</li>
-                        <li>Focused on backend development</li>
-                        <li>Previously worked in <a href="https://akimstechnologies.com/" target="_blank">Akims Technology Private Limited</a></li>
-
-                        <li>Completed My bachelor's Degree in 2024 at MZCET at Pudukkottai</li>
-                    </ul>
-
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Skills -->
-        <section class="skills section" id="skills">
-            <h2 class="section-title">Skill Set</h2>
-            <div class="skills__container bd-grid">
-                <div>
-                    <h2 class="skills__subtitle">Technologies I Work With</h2>
-                    <div class="skills__data"><span class="skills__name">Programming Language: C#</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                    <div class="skills__data"><span class="skills__name">Front-end: HTML,CSS,JS</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                    <div class="skills__data"><span class="skills__name">Back-end: ASP.NET,MVC,CORE,Web APIs</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                    <div class="skills__data"><span class="skills__name">Web Framework: Angular</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                    <div class="skills__data"><span class="skills__name">Database: MS-SQL,LINQ</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                    <div class="skills__data"><span class="skills__name">Cloud: Microsoft Azure</span>
-                        <div class="skills__bar skills__c"></div>
-                    </div>
-                </div>
-                <div><img src="assets/img/work4.jpg" alt="Skills" class="skills__img" /></div>
-            </div>
-        </section>
-
-        <!-- Projects -->
-        <section class="work section" id="projects">
-            <h2 class="section-title">Projects</h2>
-            <div class="work__container bd-grid">
-                <a href="https://github.com/md-suhail-git/RMS" class="work__img"><img src="assets/img/work1.jpg"
-                        alt="ToDo List" /></a>
-                <a href="https://github.com/md-suhail-git/StudentManagement" class="work__img"><img
-                        src="assets/img/work2.jpg" alt="Pollster" /></a>
-                <a href="https://github.com/md-suhail-git/Food_Application" class="work__img"><img
-                        src="assets/img/work3.jpg" alt="Pollster" /></a>
-                <a href="https://github.com/md-suhail-git/EmpManSys" class="work__img"><img src="assets/img/work4.jpg"
-                        alt="Pollster" /></a>
-                <a href="https://github.com/md-suhail-git/DotnetAzureCosmosDb" class="work__img"><img
-                        src="assets/img/work5.jpg" alt="Pollster" /></a>
-                <a href="https://github.com/md-suhail-git/Blazor_API_crud" class="work__img"><img
-                        src="assets/img/work6.jpg" alt="Pollster" /></a>
-                <!-- <a href="#" class="work__img"><img src="assets/img/work3.jpg" alt="Project 3" /></a> -->
-            </div>
-        </section>
-
-        <!-- Contact -->
-        <section class="contact section" id="contact">
-            <h2 class="section-title">Contact</h2>
-            <div class="contact__container bd-grid">
-                <iframe
-                    src="https://docs.google.com/forms/d/e/1FAIpQLSegqB4z0REhYSujdYn-SN2XCM1lABPbRVQnUSQFpIJp0ULHuw/viewform?usp=header"
-                    width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0">
-                    Loading…
-                </iframe>
-            </div>
-        </section>
-
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p class="footer__title">Mohamed Suhail</p>
-        <div class="footer__social">
-            <a href="https://facebook.com" class="footer__icon"><i class='bx bxl-facebook'></i></a>
-            <a href="https://linkedin.com/in/mohamed-suhail-971b9b24a" class="footer__icon"><i
-                    class='bx bxl-linkedin'></i></a>
-            <a href="https://github.com/md-suhail-git" class="footer__icon"><i class='bx bxl-github'></i></a>
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-number"></div>
+    <h2 class="section-title">About Me</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-visual" data-aos="fade-right">
+      <div class="about-cube">
+        <div class="cube-inner">
+          <div class="cube-face front">⚡</div>
+          <div class="cube-face back">🛠</div>
+          <div class="cube-face left">💻</div>
+          <div class="cube-face right">☁</div>
+          <div class="cube-face top">🔗</div>
+          <div class="cube-face bottom">🗄</div>
         </div>
-        <p class="footer__copy">&#169; 2025 Mohamed Suhail. All rights reserved</p>
-    </footer>
+      </div>
+    </div>
+    <div class="about-content" data-aos="fade-left">
+      <h3>Who Am I?</h3>
+      <p class="about-bio">
+        A passionate Software Developer from Chennai, India, specializing in backend development with .NET technologies. I build scalable, efficient applications with clean architecture — from ERP systems to cloud-integrated REST APIs. Currently sharpening my craft at acSys IT Solutions, I bring a strong eye for clean code and performance.
+      </p>
+      <div class="about-tags">
+        <span class="tag">C# / .NET</span>
+        <span class="tag">ASP.NET Core</span>
+        <span class="tag">Microsoft Azure</span>
+        <span class="tag">MS-SQL</span>
+        <span class="tag">Web APIs</span>
+        <span class="tag">Angular</span>
+        <span class="tag">Entity Framework</span>
+        <span class="tag">LINQ</span>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <span class="stat-num">1+</span>
+          <span class="stat-label">Year Exp</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">10+</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">8.1</span>
+          <span class="stat-label">B.E CGPA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Typing Animation Script -->
-    <script>
-        const typedTextSpan = document.getElementById("typed-text");
-        const words = ["Software Developer"];
-        const typingDelay = 100;
-        const erasingDelay = 60;
-        const newTextDelay = 1000; // Delay between current and next text
-        let wordIndex = 0;
-        let charIndex = 0;
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-number"></div>
+    <h2 class="section-title">Skill Set</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card" data-aos="fade-up">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">⌨️</div>
+      <div class="skill-cat">Languages</div>
+      <div class="skill-items">
+        <span class="skill-item">C#</span>
+        <span class="skill-item">VB.NET</span>
+        <span class="skill-item">JavaScript</span>
+        <span class="skill-item">TypeScript</span>
+      </div>
+    </div>
+    <div class="skill-card" data-aos="fade-up" style="transition-delay:0.1s">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">🖥️</div>
+      <div class="skill-cat">Frontend</div>
+      <div class="skill-items">
+        <span class="skill-item">HTML</span>
+        <span class="skill-item">CSS</span>
+        <span class="skill-item">Angular</span>
+        <span class="skill-item">Bootstrap</span>
+        <span class="skill-item">jQuery</span>
+      </div>
+    </div>
+    <div class="skill-card" data-aos="fade-up" style="transition-delay:0.2s">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-cat">Backend</div>
+      <div class="skill-items">
+        <span class="skill-item">ASP.NET</span>
+        <span class="skill-item">ASP.NET Core MVC</span>
+        <span class="skill-item">Web API</span>
+        <span class="skill-item">ADO.NET</span>
+        <span class="skill-item">Entity Framework</span>
+      </div>
+    </div>
+    <div class="skill-card" data-aos="fade-up" style="transition-delay:0.3s">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">🗄️</div>
+      <div class="skill-cat">Database</div>
+      <div class="skill-items">
+        <span class="skill-item">SQL Server</span>
+        <span class="skill-item">LINQ</span>
+        <span class="skill-item">Entity Framework</span>
+        <span class="skill-item">Database-First</span>
+      </div>
+    </div>
+    <div class="skill-card" data-aos="fade-up" style="transition-delay:0.4s">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">☁️</div>
+      <div class="skill-cat">Cloud & DevOps</div>
+      <div class="skill-items">
+        <span class="skill-item">Microsoft Azure</span>
+        <span class="skill-item">Azure Devops</span>
+        <span class="skill-item">App Service</span>
+        <span class="skill-item">Azure SQL</span>
+        <span class="skill-item">Function App</span>
+      </div>
+    </div>
+    <div class="skill-card" data-aos="fade-up" style="transition-delay:0.5s">
+      <div class="corner-deco"></div>
+      <div class="skill-icon">🛠️</div>
+      <div class="skill-cat">Tools</div>
+      <div class="skill-items">
+        <span class="skill-item">Git & GitHub</span>
+        <span class="skill-item">Crystal Reports</span>
+        <span class="skill-item">Cosmos DB</span>
+        <span class="skill-item">Blazor</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function type() {
-            if (charIndex < words[wordIndex].length) {
-                typedTextSpan.textContent += words[wordIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(type, typingDelay);
-            } else {
-                setTimeout(erase, newTextDelay);
-            }
-        }
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-number"></div>
+    <h2 class="section-title">Projects</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card" data-aos="fade-up">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_001</div>
+      <div class="project-name">Restaurant Management System</div>
+      <p class="project-desc">Comprehensive restaurant billing with order management, menu control, and reservation tracking. Integrated kitchen workflows and Crystal Reports for sales insights.</p>
+      <div class="project-tags">
+        <span class="project-tag">C#.NET</span>
+        <span class="project-tag">SQL Server</span>
+        <span class="project-tag">Crystal Reports</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/RMS" class="project-link" target="_blank">View Repository</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" style="transition-delay:0.1s">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_002</div>
+      <div class="project-name">Car Rental Platform</div>
+      <p class="project-desc">Full-stack car rental system with Angular frontend and ASP.NET Core backend. Admin dashboard with dynamic listings, search, bookings, and payments via EF Core.</p>
+      <div class="project-tags">
+        <span class="project-tag">Angular</span>
+        <span class="project-tag">ASP.NET Core</span>
+        <span class="project-tag">EF Core</span>
+        <span class="project-tag">Web API</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/StudentManagement" class="project-link" target="_blank">View Repository</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" style="transition-delay:0.2s">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_003</div>
+      <div class="project-name">Employee Management System</div>
+      <p class="project-desc">CRUD operations, role-based access control, and performance tracking. EF Code-First migrations with data seeding. Advanced search, filtering, and reporting.</p>
+      <div class="project-tags">
+        <span class="project-tag">ASP.NET MVC</span>
+        <span class="project-tag">SQL Server</span>
+        <span class="project-tag">EF Code-First</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/EmpManSys" class="project-link" target="_blank">View Repository</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" style="transition-delay:0.3s">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_004</div>
+      <div class="project-name">Food Application</div>
+      <p class="project-desc">Food ordering application with intuitive menu browsing, order placement, and tracking capabilities built with modern .NET technologies.</p>
+      <div class="project-tags">
+        <span class="project-tag">ASP.NET</span>
+        <span class="project-tag">SQL Server</span>
+        <span class="project-tag">Web API</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/Food_Application" class="project-link" target="_blank">View Repository</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" style="transition-delay:0.4s">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_005</div>
+      <div class="project-name">Azure Cosmos DB Integration</div>
+      <p class="project-desc">Cloud-native .NET application leveraging Microsoft Azure Cosmos DB for globally distributed, multi-model database operations and scalable data management.</p>
+      <div class="project-tags">
+        <span class="project-tag">.NET</span>
+        <span class="project-tag">Azure</span>
+        <span class="project-tag">Cosmos DB</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/DotnetAzureCosmosDb" class="project-link" target="_blank">View Repository</a>
+    </div>
+    <div class="project-card" data-aos="fade-up" style="transition-delay:0.5s">
+      <div class="corner-deco2"></div>
+      <div class="project-num">PROJECT_006</div>
+      <div class="project-name">Blazor CRUD API</div>
+      <p class="project-desc">Interactive Blazor WebAssembly application with full CRUD operations through a RESTful API, demonstrating modern .NET full-stack capabilities.</p>
+      <div class="project-tags">
+        <span class="project-tag">Blazor</span>
+        <span class="project-tag">Web API</span>
+        <span class="project-tag">C#</span>
+      </div>
+      <a href="https://github.com/md-suhail-git/Blazor_API_crud" class="project-link" target="_blank">View Repository</a>
+    </div>
+  </div>
+</section>
 
-        function erase() {
-            if (charIndex > 0) {
-                typedTextSpan.textContent = words[wordIndex].substring(0, charIndex - 1);
-                charIndex--;
-                setTimeout(erase, erasingDelay);
-            } else {
-                wordIndex = (wordIndex + 1) % words.length;
-                setTimeout(type, typingDelay + 300);
-            }
-        }
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-number"></div>
+    <h2 class="section-title">Experience</h2>
+    <div class="section-line"></div>
+  </div>
+  <div style="max-width:800px;margin:0 auto;">
+    <div class="timeline" data-aos="fade-up">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">NOV 2025 – PRESENT</div>
+        <div class="timeline-company">acSys IT Solutions Pvt Ltd</div>
+        <div class="timeline-role">Programmer Trainee</div>
+        <ul class="timeline-points">
+          <li>Gained hands-on experience in ERP and CRM systems, supporting real-world business workflows.</li>
+          <li>Applied SQL and ASP.NET for application development and efficient database management.</li>
+          <li>Assisted in debugging and resolving technical issues to ensure smooth system functionality.</li>
+          <li>Collaborated with senior developers to implement practical, client-aligned solutions.</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">OCT 2024 – MAR 2025</div>
+        <div class="timeline-company">Akims Technologies Pvt Ltd</div>
+        <div class="timeline-role">Software Development Intern</div>
+        <ul class="timeline-points">
+          <li>Developed and maintained applications using ASP.NET MVC, C#.NET, and Web API.</li>
+          <li>Built scalable cloud solutions with Microsoft Azure (App Service, Function App, Azure SQL).</li>
+          <li>Created Crystal Reports for enhanced data visualization and business intelligence.</li>
+          <li>Designed billing software ensuring accuracy and efficiency in financial transactions.</li>
+          <li>Implemented SQL Server interactions, optimizing data management and performance.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            if (words.length) setTimeout(type, newTextDelay);
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-number"></div>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-inner" data-aos="fade-up">
+    <p class="contact-subtitle">Interested in working together or just want to say hi? My inbox is always open — reach out and let's build something great.</p>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <span class="contact-label">Email</span>
+        <span class="contact-value">mdsuhail1502@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <span class="contact-label">Phone</span>
+        <span class="contact-value">+91 9488342133</span>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <span class="contact-label">Location</span>
+        <span class="contact-value">Chennai, India</span>
+      </div>
+    </div>
+    <div class="contact-cta">
+      <a href="mailto:mdsuhail1502@gmail.com" class="btn btn-primary">Send Email</a>
+      <a href="https://linkedin.com/in/mohamed-suhail-971b9b24a" class="btn btn-outline" target="_blank">LinkedIn</a>
+      <a href="https://github.com/md-suhail-git" class="btn btn-outline" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-logo">MS.DEV</div>
+  <div class="footer-socials">
+    <a href="https://linkedin.com/in/mohamed-suhail-971b9b24a" target="_blank">LinkedIn</a>
+    <a href="https://github.com/md-suhail-git" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-copy">© 2026 Mohamed Suhail — All rights reserved</div>
+</footer>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="canvas-bg"></canvas>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 6 + 'px';
+  cursor.style.top = e.clientY - 6 + 'px';
+  ring.style.left = e.clientX - 18 + 'px';
+  ring.style.top = e.clientY - 18 + 'px';
+});
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform = 'scale(1.8)'; ring.style.borderColor = 'rgba(0,212,255,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform = 'scale(1)'; ring.style.borderColor = 'rgba(0,212,255,0.5)'; });
+});
+
+// Scroll line
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('scroll-line').style.width = pct + '%';
+});
+
+// Typing
+const words = ['.NET Developer', 'Backend Engineer', 'Azure Specialist', 'API Architect'];
+let wi = 0, ci = 0, deleting = false;
+const el = document.getElementById('typed-text');
+function type() {
+  const word = words[wi];
+  if (!deleting) {
+    el.textContent = word.slice(0, ++ci);
+    if (ci === word.length) { deleting = true; setTimeout(type, 1500); return; }
+  } else {
+    el.textContent = word.slice(0, --ci);
+    if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; }
+  }
+  setTimeout(type, deleting ? 50 : 100);
+}
+setTimeout(type, 800);
+
+// Nav toggle
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  document.getElementById('nav-links').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('nav-links').classList.remove('open'));
+});
+
+// AOS
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('aos-animate'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+
+// Particle canvas
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+const particles = Array.from({length: 80}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  vx: (Math.random() - 0.5) * 0.3,
+  vy: (Math.random() - 0.5) * 0.3,
+  size: Math.random() * 2 + 0.5,
+  opacity: Math.random() * 0.5 + 0.1,
+  color: Math.random() > 0.5 ? '0,212,255' : '123,47,255'
+}));
+
+let mouse = {x: canvas.width/2, y: canvas.height/2};
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, i) => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
+    ctx.fill();
+    // Connect nearby
+    particles.slice(i+1).forEach(q => {
+      const dx = p.x - q.x, dy = p.y - q.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(0,212,255,${0.05 * (1 - dist/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// Active nav link
+window.addEventListener('scroll', () => {
+  const sections = ['home','about','skills','projects','experience','contact'];
+  sections.forEach(id => {
+    const sec = document.getElementById(id);
+    if (sec) {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= 100 && rect.bottom >= 100) {
+        document.querySelectorAll('.nav-links a').forEach(a => {
+          a.style.color = a.getAttribute('href') === '#'+id ? 'var(--primary)' : '';
         });
-    </script>
-
+      }
+    }
+  });
+});
+</script>
 </body>
-
 </html>
